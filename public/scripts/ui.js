@@ -136,10 +136,13 @@ const OnlineUsersPanel = (function() {
         // Add the user one-by-one
         for (const username in onlineUsers) {
             if (username != currentUser.username) {
-                onlineUsersArea.append(
-                    $("<div id='username-" + username + "'></div>")
-                        .append(UI.getUserDisplay(onlineUsers[username]))
-                );
+                const userDiv = $("<div id='username-" + username + "'></div>")
+                    .append(UI.getUserDisplay(onlineUsers[username]))
+                    .on("click", () => {
+                        // Show user profile
+                        showUserProfile(onlineUsers[username]);
+                    });
+                onlineUsersArea.append(userDiv);
             }
         }
     };
@@ -159,6 +162,22 @@ const OnlineUsersPanel = (function() {
 			);
 		}
 	};
+
+    // Function to show user profile
+    const showUserProfile = function(user) {
+        // Populate the profile overlay with user information
+        $("#profile-avatar").html(Avatar.getCode(user.avatar)); // Assuming Avatar.getCode returns the avatar HTML
+        $("#profile-name").text(user.name);
+        $("#profile-username").text(user.username); // Assuming user object has a username property
+    
+        // Show the profile overlay
+        $("#profile-overlay").fadeIn(300);
+    };
+    
+    // Close button functionality
+    $("#close-profile").on("click", () => {
+        $("#profile-overlay").fadeOut(300);
+    });
 
     // This function removes a user from the panel
 	const removeUser = function(user) {

@@ -255,3 +255,42 @@ button.icon:active {
     width: 270px;
     align-self: stretch;
 }
+
+/* Profile Overlay */
+#profile-overlay {
+    position: fixed;
+    left: 0; 
+    top: 0;
+    width: 100%; 
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    display: flex; /* Center the content */
+    justify-content: center; 
+    align-items: center; 
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+#profile-overlay .content {
+    background: white; /* White background for the profile content */
+    padding: 20px; 
+    border-radius: 8px; 
+    width: 300px; /* Set a fixed width for the profile box */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+}
+
+#profile-info {
+    text-align: center; /* Center text in the profile */
+}
+
+#profile-avatar {
+    margin: 10px 0; /* Space around the avatar */
+    width: 80px; /* Set a fixed width for the avatar */
+    height: 80px; /* Set a fixed height for the avatar */
+    border-radius: 50%; /* Make the avatar circular */
+    overflow: hidden; /* Hide overflow */
+}
+
+.user-name, .user-username {
+    font-weight: bold; /* Make the name bold */
+    margin: 5px 0; /* Space between name and username */
+}
