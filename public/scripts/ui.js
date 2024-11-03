@@ -94,6 +94,12 @@ const UserPanel = (function() {
         });
     };
 
+    // Click event for the user avatar and name
+    $("#user-panel .field-content").on("click", () => {
+        const currentUser = Authentication.getUser();
+        showUserProfile(currentUser); // Show the profile overlay with current user info
+    });
+
     // This function shows the form with the user
     const show = function(user) {
         $("#user-panel").show();
@@ -168,21 +174,6 @@ const OnlineUsersPanel = (function() {
 		}
 	};
 
-    // Function to show user profile
-    const showUserProfile = function(user) {
-        // Populate the profile overlay with user information
-        $("#profile-avatar").html(Avatar.getCode(user.avatar)); // Assuming Avatar.getCode returns the avatar HTML
-        $("#profile-name").text(user.name);
-        $("#profile-username").text(user.username); // Assuming user object has a username property
-    
-        // Show the profile overlay
-        $("#profile-overlay").fadeIn(300);
-    };
-    
-    // Close button functionality
-    $("#close-profile").on("click", () => {
-        $("#profile-overlay").fadeOut(300);
-    });
 
     // This function removes a user from the panel
 	const removeUser = function(user) {
@@ -197,6 +188,22 @@ const OnlineUsersPanel = (function() {
 
     return { initialize, update, addUser, removeUser };
 })();
+
+// Function to show user profile
+const showUserProfile = function(user) {
+    // Populate the profile overlay with user information
+    $("#profile-avatar").html(Avatar.getCode(user.avatar)); // Assuming Avatar.getCode returns the avatar HTML
+    $("#profile-name").text(user.name);
+    $("#profile-username").text(user.username); // Assuming user object has a username property
+
+    // Show the profile overlay
+    $("#profile-overlay").fadeIn(300);
+};
+
+// Close button functionality
+$("#close-profile").on("click", () => {
+    $("#profile-overlay").fadeOut(300);
+});
 
 const ChatPanel = (function() {
 	// This stores the chat area
