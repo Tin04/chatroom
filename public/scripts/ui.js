@@ -136,6 +136,7 @@ const OnlineUsersPanel = (function() {
         // Add the user one-by-one
         for (const username in onlineUsers) {
             if (username != currentUser.username) {
+                // Set clickable icon
                 const userDiv = $("<div id='username-" + username + "'></div>")
                     .append(UI.getUserDisplay(onlineUsers[username]))
                     .on("click", () => {
@@ -156,10 +157,14 @@ const OnlineUsersPanel = (function() {
 		
 		// Add the user
 		if (userDiv.length == 0) {
-			onlineUsersArea.append(
-				$("<div id='username-" + user.username + "'></div>")
-					.append(UI.getUserDisplay(user))
-			);
+            // Set clickable icon
+            const newUserDiv = $("<div id='username-" + user.username + "'></div>")
+                .append(UI.getUserDisplay(user))
+                .on("click", () => {
+                    // Show user profile
+                    showUserProfile(user);
+                });
+            onlineUsersArea.append(newUserDiv);
 		}
 	};
 
