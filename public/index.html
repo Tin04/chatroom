@@ -25,16 +25,17 @@
         </div>
 
         <div id="main-panel" class="row">
-            <div id="chat-panel" class="col">
+            <div id="online-users-panel" class="col"> <!-- Moved this div above the chat-panel -->
+                <div id="online-users-area" class="col"></div>
+            </div>
+
+            <div id="chat-panel" class="col"> <!-- Moved this div below the online-users-panel -->
+                <div class="chat-title">Public Chat Channel</div> <!-- Added title bar -->
                 <div id="chat-area" class="col"></div>
                 <div id="typing-indicator"></div>
                 <form id="chat-input-form" autocomplete="off">
                     <input id="chat-input" placeholder="Enter your message"></input>
                 </form>
-            </div>
-
-            <div id="online-users-panel" class="col">
-                <div id="online-users-area" class="col"></div>
             </div>
         </div>
     </div>
