@@ -151,28 +151,29 @@ io.use((socket, next) => {
     chatSession(socket.request, {}, next);
 });
 
-const onlineUsers = {};
+const onlineUsers = {}; // To store user information
+const socketIdMap = {}; // To map usernames to socket IDs
+
 io.on("connection", (socket) => {
     if (socket.request.session.user) {
         const user = socket.request.session.user;
-        const { username, avatar, name } = user;
-        onlineUsers[username] = user;
+        onlineUsers[user.username] = user; // Store user info
+        socketIdMap[user.username] = socket.id; // Map username to socket ID
         io.emit("add user", JSON.stringify(user));
     }
+
     socket.on("disconnect", () => {
         if (socket.request.session.user) {
             const user = socket.request.session.user;
-            const { username, avatar, name } = user;
-            if (onlineUsers[username]) {
-                delete onlineUsers[username];
-            }
+            delete onlineUsers[user.username]; // Remove user info
+            delete socketIdMap[user.username]; // Remove socket ID mapping
             io.emit("remove user", JSON.stringify(user));
         }
     });
     socket.on("get users", () => {
         socket.emit("users", JSON.stringify(onlineUsers));
     });
-    socket.on("get messages", () => {
+    socket.on("get public messages", () => {
         const messages = JSON.parse(fs.readFileSync("./data/chatroom.json"));
         socket.emit("messages", JSON.stringify(messages));
     });
@@ -190,6 +191,14 @@ io.on("connection", (socket) => {
         if (socket.request.session.user) {
             const { username, avatar, name } = socket.request.session.user;
             io.emit("someone typing", username);
+        }
+    });
+    socket.on("private message", ({ recipient, content }) => {
+        const sender = socket.request.session.user;
+        const recipientSocketId = socketIdMap[recipient]; // Get recipient's socket ID
+        if (recipientSocketId) {
+            const message = { user: sender, datetime: new Date().toISOString(), content };
+            io.to(recipientSocketId).emit("private message", JSON.stringify(message)); // Send message to recipient
         }
     });
 })

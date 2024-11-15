@@ -18,7 +18,7 @@ const Socket = (function() {
             socket.emit("get users");
 
             // Get the chatroom messages
-            socket.emit("get messages");
+            socket.emit("get public messages");
         });
 
         // Set up the users event
@@ -64,6 +64,45 @@ const Socket = (function() {
         socket.on("someone typing", (username) => {
             ChatPanel.setTyping(username);
         })
+
+        // // Handle private messages
+        // socket.on("private message", ({ recipient, content }) => {
+        //     const sender = socket.request.session.user;
+        //     if (recipient in onlineUsers) {
+        //         const message = { user: sender, datetime: new Date().toISOString(), content };
+        //         // Emit the message to the recipient only
+        //         socket.to(recipient).emit("private message", JSON.stringify(message));
+        //     }
+        // });
+        // Handle private messages
+        socket.on("private message", ({ recipient, content }) => {
+            const sender = socket.request.session.user;
+            if (recipient in onlineUsers) {
+                const message = { user: sender, datetime: new Date().toISOString(), content };
+                // Emit the message to the recipient only
+                socket.to(recipient).emit("private message", JSON.stringify(message));
+                
+                // Create a new private chat panel if it doesn't exist
+                createPrivateChatPanel(recipient);
+            }
+        });
+    };
+
+    // Function to create a new private chat panel
+    const createPrivateChatPanel = (recipient) => {
+        const chatPanelId = `private-chat-${recipient}`;
+        if (!$(`#${chatPanelId}`).length) { // Check if the panel already exists
+            const privateChatPanel = `
+                <div id="${chatPanelId}" class="private-chat-panel">
+                    <div class="chat-title">Private Chat with ${recipient}</div>
+                    <div class="private-chat-area"></div>
+                    <input class="private-chat-input" placeholder="Type a message...">
+                    <button class="send-private-message">Send</button>
+                </div>
+            `;
+            $("#main-panel").append(privateChatPanel); // Append to the main panel
+            $(`#private-chat-${recipient}`).hide();
+        }
     };
 
     // This function disconnects the socket from the server

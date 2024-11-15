@@ -143,15 +143,34 @@ const OnlineUsersPanel = (function() {
         for (const username in onlineUsers) {
             if (username != currentUser.username) {
                 // Set clickable icon
-                const userDiv = $("<div id='username-" + username + "'></div>")
+                const userDiv = $("<div class='online-user' id='username-" + username + "'></div>")
                     .append(UI.getUserDisplay(onlineUsers[username]))
                     .on("click", () => {
                         // Show user profile
                         showUserProfile(onlineUsers[username]);
                     });
                 onlineUsersArea.append(userDiv);
+                // Function to switch to private chat
+        
+
+                // Event listener for user click to start private chat
+                userDiv.on("click", function() {
+                    const recipient = username;
+                    console.log(recipient);
+                    switchToPrivateChat(recipient);
+                });
             }
         }
+    };
+
+    const switchToPrivateChat = (recipient) => {
+        $("#public-chat-area").hide(); // Hide public chat
+        // $("#private-chat").show(); // Show private chat
+        $(`#private-chat-${recipient}`).show();
+        // $("#private-chat-area").empty(); // Clear previous messages
+        $(`#private-chat-${recipient}`).empty();
+        // Optionally, set the recipient's name in the private chat title
+        $(".chat-title").text(`Private Chat with ${recipient}`);
     };
 
     // This function adds a user in the panel
@@ -171,6 +190,12 @@ const OnlineUsersPanel = (function() {
                     showUserProfile(user);
                 });
             onlineUsersArea.append(newUserDiv);
+            // Event listener for user click to start private chat
+            newUserDiv.on("click", function() {
+                const recipient = user.username; // Get the username from the clicked item
+                console.log(recipient);
+                switchToPrivateChat(recipient);
+            });
 		}
 	};
 
@@ -213,7 +238,8 @@ const ChatPanel = (function() {
     // This function initializes the UI
     const initialize = function() {
 		// Set up the chat area
-		chatArea = $("#chat-area");
+		chatArea = $("#public-chat-area");  // maybe other code also need to change to show private chat
+        // privateChat = $("#private-chat-area");
         $("#chat-input").on("keydown", (e) => {
             Socket.userTyping();
         });

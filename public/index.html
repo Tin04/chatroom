@@ -25,17 +25,25 @@
         </div>
 
         <div id="main-panel" class="row">
-            <div id="online-users-panel" class="col"> <!-- Moved this div above the chat-panel -->
+            <div id="online-users-panel" class="col">
                 <div id="online-users-area" class="col"></div>
             </div>
 
-            <div id="chat-panel" class="col"> <!-- Moved this div below the online-users-panel -->
-                <div class="chat-title">Public Chat Channel</div> <!-- Added title bar -->
-                <div id="chat-area" class="col"></div>
+            <div id="chat-panel" class="col">
+                <div class="chat-title">Public Chat Channel</div>
+                <div id="public-chat-area" class="col"></div>
                 <div id="typing-indicator"></div>
                 <form id="chat-input-form" autocomplete="off">
                     <input id="chat-input" placeholder="Enter your message"></input>
                 </form>
+                <button id="back-to-public-chat">Back to Public Chat</button>
+                
+                <!-- <div id="private-chat" style="display: none;">
+                    <div id="private-chat-area"></div>
+                    <input id="private-chat-input" placeholder="Type a message...">
+                    <button id="send-private-message">Send</button>
+                    <button id="back-to-public-chat">Back to Public Chat</button>
+                </div> -->
             </div>
         </div>
     </div>
@@ -108,6 +116,17 @@
             },
             () => { SignInForm.show(); }
         );
+
+        
+
+        // Function to switch back to public chat
+        const switchToPublicChat = () => {
+            $(".private-chat-panel").hide(); // Hide private chat
+            $("#public-chat-area").show(); // Show public chat
+        };
+
+        // Event listener for a button or link to go back to public chat
+        $("#back-to-public-chat").on("click", switchToPublicChat);
     });
     </script>
 </body>
