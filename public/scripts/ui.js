@@ -154,23 +154,13 @@ const OnlineUsersPanel = (function() {
         
 
                 // Event listener for user click to start private chat
-                userDiv.on("click", function() {
-                    const recipient = username;
-                    console.log(recipient);
-                    switchToPrivateChat(recipient);
-                });
+                // userDiv.on("click", function() {
+                //     const recipient = username;
+                //     console.log(recipient);
+                //     switchToPrivateChat(recipient);
+                // });
             }
         }
-    };
-
-    const switchToPrivateChat = (recipient) => {
-        $("#public-chat-area").hide(); // Hide public chat
-        // $("#private-chat").show(); // Show private chat
-        $(`#private-chat-${recipient}`).show();
-        // $("#private-chat-area").empty(); // Clear previous messages
-        $(`#private-chat-${recipient}`).empty();
-        // Optionally, set the recipient's name in the private chat title
-        $(".chat-title").text(`Private Chat with ${recipient}`);
     };
 
     // This function adds a user in the panel
@@ -191,11 +181,11 @@ const OnlineUsersPanel = (function() {
                 });
             onlineUsersArea.append(newUserDiv);
             // Event listener for user click to start private chat
-            newUserDiv.on("click", function() {
-                const recipient = user.username; // Get the username from the clicked item
-                console.log(recipient);
-                switchToPrivateChat(recipient);
-            });
+            // newUserDiv.on("click", function() {
+            //     const recipient = user.username; // Get the username from the clicked item
+            //     console.log(recipient);
+            //     switchToPrivateChat(recipient);
+            // });
 		}
 	};
 
@@ -214,12 +204,26 @@ const OnlineUsersPanel = (function() {
     return { initialize, update, addUser, removeUser };
 })();
 
+const switchToPrivateChat = (recipient) => {
+    $("#public-chat-area").hide(); // Hide public chat
+    $("#profile-overlay").fadeOut(300); // Close the profile overlay
+    $(`#private-chat-${recipient}`).show();
+    $(`#private-chat-${recipient}`).empty();
+    // Optionally, set the recipient's name in the private chat title
+    $(".chat-title").text(`Private Chat with ${recipient}`);
+};
+
 // Function to show user profile
 const showUserProfile = function(user) {
     // Populate the profile overlay with user information
     $("#profile-avatar").html(Avatar.getCode(user.avatar)); // Assuming Avatar.getCode returns the avatar HTML
     $("#profile-name").text(user.name);
     $("#profile-username").text(user.username); // Assuming user object has a username property
+
+    // Add a button to start private chat
+    $("#private-chat-button").off("click").on("click", () => {
+        switchToPrivateChat(user.username); // Start private chat with the selected user
+    });
 
     // Show the profile overlay
     $("#profile-overlay").fadeIn(300);
